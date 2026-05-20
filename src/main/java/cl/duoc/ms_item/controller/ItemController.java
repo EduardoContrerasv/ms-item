@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/items")
+@RequestMapping("/api/v1/item")
 public class ItemController {
     @Autowired
 
@@ -25,7 +25,7 @@ public class ItemController {
         return ResponseEntity.ok(service.findAll());
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/getItemId/{id}")
     public ResponseEntity<ItemResponseDto> findById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
