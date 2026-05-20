@@ -1,9 +1,9 @@
 package cl.duoc.ms_item.enums;
 
 public enum ItemType {
-    Weapon,
-    Armor,
-    Consumable,
-    Currency,
-    Cosmetic
+    WEAPON,
+    ARMOR,
+    CONSUMABLE,
+    CURRENCY,
+    COSMETIC
 }
