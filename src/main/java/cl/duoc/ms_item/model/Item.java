@@ -28,7 +28,7 @@ public class Item {
     private int price;
     @Column(name = "required_level",nullable = false)
     private int requiredLevel;
-
+    
     @Enumerated(EnumType.STRING)
     private ItemType itemType;
     @Enumerated(EnumType.STRING)
