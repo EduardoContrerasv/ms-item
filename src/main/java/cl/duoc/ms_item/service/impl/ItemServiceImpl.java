@@ -8,12 +8,14 @@ import cl.duoc.ms_item.model.Item;
 import cl.duoc.ms_item.repository.ItemRepository;
 import cl.duoc.ms_item.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository repository;
@@ -36,11 +38,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponseDto findByName(String name) {
+        log.debug("findByName(name={})", name);
         return repository.findByName(name).map(this::toDto).orElseThrow(() -> new RuntimeException("Nombre no encontrado"));
     }
 
     @Override
     public List<ItemResponseDto> findByLevel(int level) {
+        log.debug("findByLevel({})", level);
         List<Item> items = repository.findByRequiredLevel(level);
 
         if(items.isEmpty()) {
@@ -51,6 +55,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponseDto updateDescription(Long id, String description) {
+        log.debug("updateDescription({}, {})", id, description);
         Item item = repository.findById(id).orElseThrow(() -> new RuntimeException("Item con ID " + id + " no existe"));
         item.setDescription(description);
         return toDto(repository.save(item));
@@ -58,6 +63,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponseDto updatePrice(Long id, int price) {
+        log.debug("updatePrice({}, {})", id, price);
         Item item = repository.findById(id).orElseThrow(() -> new RuntimeException("Item con ID " + id + " no existe"));
         if (price < 0) throw new RuntimeException("El valor debe ser mayor o igual a 0");
         item.setPrice(price);
@@ -66,6 +72,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponseDto updateRarity(Long id, Rarity rarity) {
+        log.debug("updateRarity({}, {})", id, rarity);
         Item item = repository.findById(id).orElseThrow(() -> new RuntimeException("Item con ID " + id + " no existe"));
         item.setRarity(rarity);
         return toDto(repository.save(item));
@@ -73,28 +80,33 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemResponseDto> findAll(){
+        log.debug("findAll()");
         return repository.findAll().stream().map(this::toDto).toList();
     }
 
     @Override
     public ItemResponseDto findById(Long id) {
+        log.debug("findById({})", id);
         return repository.findById(id).map(this::toDto).orElseThrow(() -> new RuntimeException("Item con ID " + id + " no existe"));
     }
 
     @Override
     public List<ItemResponseDto> findByRarity(String rarity) {
+        log.debug("findByRarity({})", rarity);
         Rarity rarityEnum = Rarity.valueOf(rarity.toUpperCase());
         return repository.findByRarity(rarityEnum).stream().map(this::toDto).toList();
     }
 
     @Override
     public List<ItemResponseDto> findByType(String itemType) {
+        log.debug("findByType({})", itemType);
         ItemType typeEnum = ItemType.valueOf(itemType.toUpperCase());
         return repository.findByItemType(typeEnum).stream().map(this::toDto).toList();
     }
 
     @Override
     public ItemResponseDto createItem(ItemRequestDto dto) {
+        log.debug("createItem({})", dto);
         if (dto.getName() == null || dto.getName().trim().isEmpty()) {
             throw new RuntimeException("El nombre del item es obligatorio");
         }
@@ -111,6 +123,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponseDto updateItem(Long id, ItemRequestDto dto) {
+        log.debug("updateItem({}, {})", id, dto);
         Item existingItem = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Item con ID " + id + " no existe"));
 
@@ -136,6 +149,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void deleteItem(Long id) {
+        log.debug("deleteItem({})", id);
         if(!repository.existsById(id)){
             throw new RuntimeException("Item con ID " + id + " no existe");
         }
